@@ -12,6 +12,7 @@ from trajectory import *
 from planet import *
 from anima import *
 
+# Lista de planetas que se usarán para la representación:
 planets = []
 
 # Función que permite la entrada por consola de una
@@ -28,6 +29,8 @@ def genericPlot(formula, init, end):
     plt.plot(x,formula(x))
     plt.show()
 
+# Función que sirve para generar un menu para el usuario al seleccionar una
+# opción para un planeta:
 def planetSelector(planets):
     i=0;
     for planet in planets:
@@ -43,7 +46,10 @@ def planetSelector(planets):
         usage = int(raw_input("Introduce otra opción: "))
     return usage
 
-#Obtiene las trayectorias de un archivo data con todos los planetas.
+# Obtiene las trayectorias de un archivo data con todos los planetas. Además
+# es la función que se encarga de mostrar un menu selector para el usuario
+# dandole la posibilidad de crear la representación de las trayectorias y de
+# crear una animación con las mismas.
 def calculateTrajectories(trajectory):
 
     os.system("clear")
@@ -143,7 +149,8 @@ def calculateTrajectories(trajectory):
                 raw_input("Pulsa cualquier botón para continuar...")
                 os.system("clear")
 
-# Cuerpo principal del programa
+# Cuerpo principal del programa, tan solo se eleige con que calcular las
+# trayectorias y ejecuta el método anterior.
 if __name__ == "__main__":
     usage = raw_input("Calcular la trayectorias usando la función de Bessel o Newton-Raphson (B/NR - B default): ")
     calculateTrajectories(usage)

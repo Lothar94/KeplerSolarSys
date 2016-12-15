@@ -3,11 +3,10 @@
 
 import math
 import scipy.special as sp
-#from mpl_toolkits.mplot3d import Axes3D
 from numpy import *
 from planet import *
 
-# Función que implementa el método de Newton-Raphson
+# Función que implementa el método de Newton-Raphson.
 def NewtonsRaphsonMethod(function, derivate, init_u, gi, N, trace):
     error = 0.0000001
     if 0 <= gi and gi <= 2*math.pi+error:
@@ -25,6 +24,7 @@ def NewtonsRaphsonMethod(function, derivate, init_u, gi, N, trace):
         print("El valor de gi no está entre 0 y 2pi.")
     return -1
 
+# Función que implementa el método que usa la función de Bessel.
 def besselFunctionMethod(epsilon, gi, N, trace):
     besselSum = 0
     for n in range(1,N+1):

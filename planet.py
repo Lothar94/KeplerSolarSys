@@ -41,6 +41,7 @@ class Planet:
         c = cross([x[0],x[1],0],[dx[0], dx[1], 0])
         return c
 
+    #Calcula módulo del momento angular del planeta
     def module_angular_moment(self, time):
         c = self.angular_moment(time).tolist()
         return sqrt(c[0]**2+c[1]**2+c[2]**2)
