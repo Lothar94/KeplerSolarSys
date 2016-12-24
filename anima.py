@@ -11,6 +11,9 @@ from planet import *
 def generateAnimation(planets_local):
     patchs = []
 
+    Writer = animation.writers['ffmpeg']
+    writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800)
+
     for planet in planets_local:
         patchs.insert(len(patchs), plt.Circle((0, 1), 0.1, fc='y'))
 
@@ -44,5 +47,6 @@ def generateAnimation(planets_local):
                                    interval=100,
                                    blit=False)
 
-    plt.show()
+    #plt.show()
+    anim.save("anim.mp4", writer = writer)
     plt.close()

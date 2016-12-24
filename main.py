@@ -4,8 +4,10 @@
 import csv
 import os
 import matplotlib
-matplotlib.use('TKAgg')
+matplotlib.use('Agg')
 
+from mpl_toolkits.mplot3d import Axes3D
+import mpl_toolkits.mplot3d.art3d as art3d
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 from trajectory import *
@@ -57,12 +59,12 @@ def calculateTrajectories(trajectory):
     with open('./data.csv', 'rb') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for row in spamreader:
-            planet = Planet(row[0],float(row[2]), float(row[3]), float(row[1]))
+            planet = Planet(row[0],float(row[2]), float(row[3]), float(row[1]), float(row[4]), float(row[5]), float(row[6]))
             planets.insert(len(planets), planet)
 
         usage = -1
 
-        while usage != 4:
+        while usage != 5:
 
             print "Información Básica: "
 
@@ -73,10 +75,11 @@ def calculateTrajectories(trajectory):
 
             print "\nMenu:"
             print "Calcular las trayectorias de los planetas en 2D [0]"
+            print "Calcular las trayectorias de los planetas en 3D [4]"
             print "Calcular las trayectorias de los planetas en 2D con animación [1]"
             print "Comparativa Bessel/Newton-Raphson [2]"
             print "Opciones para planetas [3]"
-            print "Salir [4]"
+            print "Salir [5]"
             usage = int(raw_input("Introduce una opción: "))
 
             os.system("clear")
@@ -90,7 +93,8 @@ def calculateTrajectories(trajectory):
                         tr = planet.trajectoryBessel(100)
                     plt.plot(tr[0],tr[1], label=planet.getName())
                 plt.legend()
-                plt.show()
+                #plt.show()
+                plt.savefig("2d.png")
                 plt.close()
             elif usage == 1:
                 generateAnimation(planets)
@@ -106,7 +110,8 @@ def calculateTrajectories(trajectory):
                 print "Calcular energía [2]"
                 print "Calcular área entre dos instantes [3]"
                 print "Calcular la distancia al sol [4]"
-                print "Atras [5]"
+                print "Calcular la posición en R3 [5]"
+                print "Atras [6]"
                 opt = int(raw_input("Introduce una opción: "))
 
                 os.system("clear")
@@ -115,7 +120,9 @@ def calculateTrajectories(trajectory):
                     optp = planetSelector(planets)
                     time = float(raw_input("Introduce un instante:"))
                     pos = planets[optp].positionBessel(time)
-                    print "La posición en el instante " + str(time)+ " para el planeta " + planets[optp].getName() + " es " + str(pos)
+                    pos2 = planets[optp].positionNR(time)
+                    print "La posición en el instante " + str(time)+ " para el planeta " + planets[optp].getName() + "usando NR es " + str(pos2)
+                    print "La posición en el instante " + str(time)+ " para el planeta " + planets[optp].getName() + "usando Bessel es " + str(pos)
                 elif opt == 1:
                     optp = planetSelector(planets)
                     time = float(raw_input("Introduce un instante:"))
@@ -137,11 +144,42 @@ def calculateTrajectories(trajectory):
                     time = float(raw_input("Introduce un instante:"))
                     d = planets[optp].sunDistanceTime(time)
                     print "La distancia en el instante " + str(time) + " para el planeta " + planets[optp].getName()+  " es " + str(d)
+                elif opt == 5:
+                    optp = planetSelector(planets)
+                    time = float(raw_input("Introduce un instante:"))
+                    pos = planets[optp].position3D
+                    print "La posición en el instante " + str(time)+ " para el planeta " + planets[optp].getName() + "usando Bessel es " + str(pos)
 
                 raw_input("Pulsa cualquier botón para continuar...")
                 os.system("clear")
-
             elif usage == 4:
+                fig = plt.figure()
+                ax = plt.axes(projection='3d')
+                for i in ["x","y","z"]:
+                    patch = plt.Circle((0, 0), 0.1, fc='y')
+                    ax.add_patch(patch)
+                    art3d.pathpatch_2d_to_3d(patch, z=0, zdir="i")
+                for i in range(len(planets)-4):
+                    tr = planets[i].trajectory3D(4)
+                    ax.plot(tr[0], tr[1], tr[2])
+                plt.savefig("3d_1.png")
+                plt.close()
+
+                fig = plt.figure()
+                ax = plt.axes(projection='3d')
+                for i in ["x","y","z"]:
+                    patch = plt.Circle((0, 0), 0.1, fc='y')
+                    ax.add_patch(patch)
+                    art3d.pathpatch_2d_to_3d(patch, z=0, zdir="i")
+                for i in range(len(planets)):
+                    tr = planets[i].trajectory3D(4)
+                    ax.plot(tr[0], tr[1], tr[2])
+                plt.savefig("3d_2.png")
+                plt.close()
+                raw_input("Pulsa cualquier botón para continuar...")
+                os.system("clear")
+
+            elif usage == 5:
                 print "Finalizando..."
                 print "Finalizado"
             else:

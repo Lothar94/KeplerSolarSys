@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#import math
+
 from numpy import *
 import trajectory as tr
 
 class Planet:
-    def __init__(self, name, epsilon, period, a_axe):
+    def __init__(self, name, epsilon, period, a_axe, i, omega, gammab):
         self.name = name
         self.epsilon = epsilon
         self.period = period
         self.a_axe = a_axe
+        self.i = i
+        self.gamma = gammab-omega
 
     #Calcula la distancia del planeta al sol (módulo).
     def sunDistance(self,pos):
@@ -150,5 +152,44 @@ class Planet:
         u = tr.besselFunctionMethod(self.epsilon, gi, 30, False)
         pos_x = self.a_axe*(cos(u)-self.epsilon)
         pos_y = self.a_axe*(sqrt(1-self.epsilon*self.epsilon)*sin(u))
-
         return [pos_x,pos_y]
+
+    #Obtiene la posición en R3 de un planeta para un instante dado usando la función de Bessel.
+    def position3D(self, time):
+        pos2d = self.positionBessel(time)
+        pos2d.insert(len(pos2d),0)
+
+        R1 = array([[1,0,0],
+                    [0, cos(self.i), -sin(self.i)],
+                    [0, sin(self.i), cos(self.i)]])
+        R2 = array([[cos(self.gamma), -sin(self.gamma),0],
+                    [sin(self.gamma), cos(self.gamma),0],
+                    [0,0,1]])
+
+        y = array(pos2d)
+
+        x = dot(R1,y)
+        x = dot(R2,x)
+
+        return x
+
+    def trajectory3D(self, nDivisions):
+        times = []
+        tray_x = []
+        tray_y = []
+        tray_z = []
+
+        #Definición de las funciones
+        keplerf = lambda u: u-self.epsilon*sin(u)
+        dkeplerf = lambda u: 1-self.epsilon*cos(u)
+
+        for i in range(nDivisions+1):
+            times.insert(len(times), self.period*i/nDivisions)
+
+        for t in times:
+            pos = self.position3D(t)
+            tray_x.insert(len(tray_x), pos[0])
+            tray_y.insert(len(tray_y), pos[1])
+            tray_z.insert(len(tray_z), pos[2])
+
+        return [tray_x,tray_y,tray_z]

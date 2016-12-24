@@ -1,5 +1,11 @@
 KeplerSolarSys
 ==============
+
+Integrantes del grupo:
+* David Funes Zafra
+* Lothar Soto Palma
+* Mario Rosano Arrebola
+
 Un programa que construye una representación del sistema solar haciendo uso de la función de Kepler.
 $$u-\epsilon sin(u)=\zeta$$
 ##Requisitos
