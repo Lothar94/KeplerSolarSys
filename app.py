@@ -23,8 +23,9 @@ def index():
     png_output = draw2dTrajectories(args["nDivisions"])
     png_output2 = draw3dTrajectories1(args["nDivisions"])
     png_output3 = draw3dTrajectories2(args["nDivisions"])
+    png_output4 = draw3dTrajectories3(args["nDivisions"])
 
-    return render_template("index.html",img2d=urllib.quote(png_output.rstrip('\n')),img3d_1=urllib.quote(png_output2.rstrip('\n')),img3d_2=urllib.quote(png_output3.rstrip('\n')), my_planets = planets, code=escape(codecs.open("app.py", "r", "utf-8").read()))
+    return render_template("index.html",img2d=urllib.quote(png_output.rstrip('\n')),img3d_1=urllib.quote(png_output2.rstrip('\n')),img3d_2=urllib.quote(png_output3.rstrip('\n')),img3d_3=urllib.quote(png_output4.rstrip('\n')), my_planets = planets, code=escape(codecs.open("app.py", "r", "utf-8").read()))
 
 @app.route("/calculate/")
 def calculate():

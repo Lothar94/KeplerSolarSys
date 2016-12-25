@@ -12,7 +12,8 @@ class Planet:
         self.period = period
         self.a_axe = a_axe
         self.i = i
-        self.gamma = gammab-omega
+        self.gamma = gammab - omega
+        self.omega = omega
 
     #Calcula la distancia del planeta al sol (módulo).
     def sunDistance(self,pos):
@@ -171,11 +172,16 @@ class Planet:
         R2 = array([[cos(self.gamma), -sin(self.gamma),0],
                     [sin(self.gamma), cos(self.gamma),0],
                     [0,0,1]])
+        R3 = array([[cos(self.omega), -sin(self.omega),0],
+                    [sin(self.omega), cos(self.omega),0],
+                    [0,0,1]])
 
         y = array(pos2d)
 
-        x = dot(R1,y)
+        x = dot(R3,y)
+        x = dot(R1,x)
         x = dot(R2,x)
+
 
         return x
 

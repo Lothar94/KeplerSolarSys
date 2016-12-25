@@ -239,6 +239,23 @@ def draw3dTrajectories2(nDivisions):
     plt.close()
     return png_output
 
+def draw3dTrajectories3(nDivisions):
+    fig = plt.figure()
+    ax = plt.axes(projection='3d')
+    for i in ["x","y","z"]:
+        patch = plt.Circle((0, 0), 0.1, fc='y')
+        ax.add_patch(patch)
+        art3d.pathpatch_2d_to_3d(patch, z=0, zdir="i")
+    for i in range(len(planets)-4):
+        tr = planets[i].trajectory3D(nDivisions)
+        ax.plot(tr[0], tr[1], tr[2])
+    canvas=FigureCanvas(fig)
+    png_output = StringIO.StringIO()
+    canvas.print_png(png_output)
+    png_output = png_output.getvalue().encode("base64")
+    plt.close()
+    return png_output
+
 def createAnimation():
     generateAnimation(planets)
 
