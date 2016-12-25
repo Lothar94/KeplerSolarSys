@@ -80,6 +80,12 @@ class Planet:
     def getA_axe(self):
         return self.a_axe
 
+    def get_i(self):
+        return self.i
+
+    def getGamma(self):
+        return self.gamma
+
     #Calcula la trayectoria del planeta usando el método de Newton-Raphson
     def trajectoryNR(self, nDivisions):
         times = []

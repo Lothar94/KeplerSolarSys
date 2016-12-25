@@ -1,5 +1,5 @@
 import matplotlib
-matplotlib.use('TKAgg')
+matplotlib.use('Agg')
 
 import csv
 import numpy as np
@@ -14,7 +14,7 @@ def generateAnimation(planets_local):
     Writer = animation.writers['ffmpeg']
     writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800)
 
-    for planet in planets_local:
+    for i in range(len(planets_local)):
         patchs.insert(len(patchs), plt.Circle((0, 1), 0.1, fc='y'))
 
     fig = plt.figure("Anima")
@@ -24,9 +24,9 @@ def generateAnimation(planets_local):
     ax = plt.axes(xlim=(-40, 30), ylim=(-40, 40))
 
     def init():
-        for planet in planets_local:
-            tr = planet.trajectoryBessel(100)
-            ax.plot(tr[0],tr[1], label=planet.getName())
+        for i in range(len(planets_local)):
+            tr = planets_local[i].trajectoryBessel(100)
+            ax.plot(tr[0],tr[1], label=planets_local[i].getName())
             plt.legend()
         for i in range(len(patchs)):
             ax.add_patch(patchs[i])
@@ -35,15 +35,15 @@ def generateAnimation(planets_local):
     def animate(i):
         for k in range(len(patchs)):
             x, y = patchs[k].center
-            x = planets_local[k].positionBessel(5*i)[0]
-            y = planets_local[k].positionBessel(5*i)[1]
+            x = planets_local[k].positionBessel(20*i)[0]
+            y = planets_local[k].positionBessel(20*i)[1]
             patchs[k].center = (x, y)
 
         return ax,
 
     anim = animation.FuncAnimation(fig, animate,
                                    init_func=init,
-                                   frames=3000,
+                                   frames=500,
                                    interval=100,
                                    blit=False)
 

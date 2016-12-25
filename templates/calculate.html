@@ -1,0 +1,153 @@
+{% extends "layout.html" %}
+{% block title %}KeplerSolarSystem{% endblock %}
+{% block body %}
+<p>En esta sección podremos realizar los calculos de forma más específica para
+cada caso, es recomendable conocer la numeración de los planetas para poder
+ejecutar las operaciones. Si los campos están vacios por defecto se tomará 0
+como el valor para la operación.</p>
+<table class="common">
+  <tbody>
+    <tr>
+        <th class="common">Nombre</th>
+        <th class="common">Número</th>
+    </tr>
+  {% for i in range(8): %}
+      <tr>
+        <td class="common">{{ my_planets[i].getName() }}</td>
+        <td class="common">{{ i }}</td>
+      </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<h2>Posición</h2>
+<p>Podemos obtener tanto la posición en el plano como en el espacio haciendo uso
+   de la ecuación de kepler y la anomalía excéntrica, además como método de
+aproximación se ha usado el método de Bessel aunque también sería posible hacerlo
+con el método de Newton-Raphson.</p>
+<script type=text/javascript>
+  $(function() {
+    $('a#calculate6').bind('click', function() {
+      $.getJSON($SCRIPT_ROOT + '/_position2d', {
+        i_p: $('input[name="i_p"]').val(),
+        p_p: $('input[name="p_p"]').val()
+      }, function(data) {
+        $("#result6").text(data.result);
+      });
+      return false;
+    });
+  });
+</script>
+<p>La posición para el planeta <input type=text size=5 name=p_p placeholder="Nº Planeta"/>  en el <input type=text size=5 name=i_p placeholder="instante"/> en el plano es
+<span id=result6>?</span>
+<p><a href=# id=calculate6>Calcular</a>
+  <script type=text/javascript>
+    $(function() {
+      $('a#calculate7').bind('click', function() {
+        $.getJSON($SCRIPT_ROOT + '/_position3d', {
+          i_p3: $('input[name="i_p3"]').val(),
+          p_p3: $('input[name="p_p3"]').val()
+        }, function(data) {
+          $("#result7").text(data);
+        });
+        return false;
+      });
+    });
+  </script>
+  <p>La posición para el planeta <input type=text size=5 name=p_p3 placeholder="Nº Planeta"/>  en el <input type=text size=5 name=i_p3 placeholder="instante"/> en el espacio es
+  <span id=result7>?</span>
+  <p><a href=# id=calculate7>Calcular</a>
+<h2>Distancia al sol</h2>
+<p>Para calcular la distancia al sol tan solo es necesario calcular el módulo de
+   la posición, ya que el sol está situado en el foco [0,0].</p>
+<script type=text/javascript>
+  $(function() {
+    $('a#calculate').bind('click', function() {
+      $.getJSON($SCRIPT_ROOT + '/_sun_distance', {
+        i: $('input[name="i"]').val(),
+        p: $('input[name="p"]').val()
+      }, function(data) {
+        $("#result").text(data.result);
+      });
+      return false;
+    });
+  });
+</script>
+<p>La distancia para el planeta <input type=text size=5 name=p placeholder="Nº Planeta"/>  en el <input type=text size=5 name=i placeholder="instante"/> es
+<span id=result>?</span>
+<p><a href=# id=calculate>Calcular</a>
+<h2>Energía</h2>
+<p>La energía es una expresión constante, en este caso se esta realizando un cálculo
+aproximado para cada posición obtenida por lo que el valor puede variar un poco
+según el instante que se tome.</p>
+<script type=text/javascript>
+  $(function() {
+    $('a#calculate2').bind('click', function() {
+      $.getJSON($SCRIPT_ROOT + '/_energy', {
+        i_e: $('input[name="i_e"]').val(),
+        p_e: $('input[name="p_e"]').val()
+      }, function(data) {
+        $("#result2").text(data.result);
+      });
+      return false;
+    });
+  });
+</script>
+<p>La energía para el planeta <input type=text size=5 name=p_e placeholder="Nº Planeta"/>  en el <input type=text size=5 name=i_e placeholder="instante"/> es
+<span id=result2>?</span>
+<p><a href=# id=calculate2>Calcular</a>
+<h2>Momento Angular</h2>
+<p>Al igual que ocurre con la energía el cálculo del momento angular también es
+aproximado por lo que puede variar según el instante.</p>
+<script type=text/javascript>
+  $(function() {
+    $('a#calculate3').bind('click', function() {
+      $.getJSON($SCRIPT_ROOT + '/_angular_moment', {
+        i_m: $('input[name="i_m"]').val(),
+        p_m: $('input[name="p_m"]').val()
+      }, function(data) {
+        $("#result3").text(data.result);
+      });
+      return false;
+    });
+  });
+</script>
+<p>El módulo del momento angular para el planeta <input type=text size=5 name=p_m placeholder="Nº Planeta"/>  en el <input type=text size=5 name=i_m placeholder="instante"/> es
+<span id=result3>?</span>
+<p><a href=# id=calculate3>Calcular</a></p>
+<script type=text/javascript>
+  $(function() {
+    $('a#calculate4').bind('click', function() {
+      $.getJSON($SCRIPT_ROOT + '/_angular_moment_vector', {
+        i_mv: $('input[name="i_mv"]').val(),
+        p_mv: $('input[name="p_mv"]').val()
+      }, function(data) {
+        $("#result4").text(data);
+      });
+      return false;
+    });
+  });
+</script>
+<p>El momento angular para el planeta <input type=text size=5 name=p_mv placeholder="Nº Planeta"/> en el <input type=text size=5 name=i_mv placeholder="instante"/> es
+<span id=result4>?</span>
+<p><a href=# id=calculate4>Calcular</a></p>
+<h2>Área</h2>
+<p>El área barrida entre dos instantes por un planeta es calculado mediante
+el momento angular.</p>
+<script type=text/javascript>
+  $(function() {
+    $('a#calculate5').bind('click', function() {
+      $.getJSON($SCRIPT_ROOT + '/_area', {
+        i_a1: $('input[name="i_a1"]').val(),
+        i_a2: $('input[name="i_a2"]').val(),
+        p_a: $('input[name="p_m"]').val()
+      }, function(data) {
+        $("#result5").text(data.result);
+      });
+      return false;
+    });
+  });
+</script>
+<p>El area barrida para el planeta <input type=text size=5 name=p_a placeholder="Nº Planeta"/>  entre el <input type=text size=5 name=i_a1 placeholder="instante"/> y el <input type=text size=5 name=i_a2 placeholder="instante"/> es
+<span id=result5>?</span>
+<p><a href=# id=calculate5>Calcular</a></p>
+{% endblock %}

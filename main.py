@@ -4,12 +4,15 @@
 import csv
 import os
 import matplotlib
+import StringIO
 matplotlib.use('Agg')
 
 from mpl_toolkits.mplot3d import Axes3D
 import mpl_toolkits.mplot3d.art3d as art3d
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+
 from trajectory import *
 from planet import *
 from anima import *
@@ -186,6 +189,68 @@ def calculateTrajectories(trajectory):
                 print "Opción no permitida."
                 raw_input("Pulsa cualquier botón para continuar...")
                 os.system("clear")
+
+def draw2dTrajectories(nDivisions):
+    figure = plt.figure("tray")
+    for planet in planets:
+         tr = planet.trajectoryBessel(nDivisions)
+         plt.plot(tr[0],tr[1], label=planet.getName())
+    plt.legend()
+    #plt.show()
+    #plt.savefig("2d.png")
+    canvas=FigureCanvas(figure)
+    png_output = StringIO.StringIO()
+    canvas.print_png(png_output)
+    png_output = png_output.getvalue().encode("base64")
+    plt.close()
+    return png_output
+
+def draw3dTrajectories1(nDivisions):
+    fig = plt.figure()
+    ax = plt.axes(projection='3d')
+    for i in ["x","y","z"]:
+        patch = plt.Circle((0, 0), 0.1, fc='y')
+        ax.add_patch(patch)
+        art3d.pathpatch_2d_to_3d(patch, z=0, zdir="i")
+    for i in range(len(planets)-3):
+        tr = planets[i].trajectory3D(nDivisions)
+        ax.plot(tr[0], tr[1], tr[2])
+    canvas=FigureCanvas(fig)
+    png_output = StringIO.StringIO()
+    canvas.print_png(png_output)
+    png_output = png_output.getvalue().encode("base64")
+    plt.close()
+    return png_output
+
+def draw3dTrajectories2(nDivisions):
+    fig = plt.figure()
+    ax = plt.axes(projection='3d')
+    for i in ["x","y","z"]:
+        patch = plt.Circle((0, 0), 0.1, fc='y')
+        ax.add_patch(patch)
+        art3d.pathpatch_2d_to_3d(patch, z=0, zdir="i")
+    for i in range(len(planets)):
+        tr = planets[i].trajectory3D(nDivisions)
+        ax.plot(tr[0], tr[1], tr[2])
+    canvas=FigureCanvas(fig)
+    png_output = StringIO.StringIO()
+    canvas.print_png(png_output)
+    png_output = png_output.getvalue().encode("base64")
+    plt.close()
+    return png_output
+
+def createAnimation():
+    generateAnimation(planets)
+
+def readPlanets():
+    with open('./data.csv', 'rb') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+        for row in spamreader:
+            planet = Planet(row[0],float(row[2]), float(row[3]), float(row[1]), float(row[4]), float(row[5]), float(row[6]))
+            planets.insert(len(planets), planet)
+
+def getPlanets():
+    return planets;
 
 # Cuerpo principal del programa, tan solo se eleige con que calcular las
 # trayectorias y ejecuta el método anterior.
