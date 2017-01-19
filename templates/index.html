@@ -17,7 +17,7 @@ de Kepler haciendo a su vez uso de la anomalía excéntrica.</p>
         <th class="common">Periodo Mínimo (p)</th>
         <th class="common">Epsilon</th>
         <th class="common">i</th>
-        <th class="common">Gamma</th>
+        <th class="common">omega</th>
     </tr>
   {% for planet in my_planets: %}
       <tr>
@@ -26,7 +26,7 @@ de Kepler haciendo a su vez uso de la anomalía excéntrica.</p>
         <td class="common">{{ planet.getPeriod() }}</td>
         <td class="common">{{ planet.getEpsilon() }}</td>
         <td class="common">{{ planet.get_i() }}</td>
-        <td class="common">{{ planet.getGamma() }}</td>
+        <td class="common">{{ planet.getSmallo() }}</td>
       </tr>
   {% endfor %}
   </tbody>

@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+'''
+    Servidor Web para permitir la visualización e interacción con el sistema
+    creado.
+'''
+
 from flask import *
 from main import *
 import json
@@ -10,6 +15,10 @@ import codecs
 app = Flask(__name__)
 readPlanets()
 planets = getPlanets()
+
+'''
+    Ruta Índice
+'''
 
 @app.route("/")
 def index():
@@ -27,9 +36,18 @@ def index():
 
     return render_template("index.html",img2d=urllib.quote(png_output.rstrip('\n')),img3d_1=urllib.quote(png_output2.rstrip('\n')),img3d_2=urllib.quote(png_output3.rstrip('\n')),img3d_3=urllib.quote(png_output4.rstrip('\n')), my_planets = planets, code=escape(codecs.open("app.py", "r", "utf-8").read()))
 
+'''
+    Ruta para los cálculos
+'''
+
 @app.route("/calculate/")
 def calculate():
     return render_template("calculate.html", my_planets = planets)
+
+'''
+    Recepción de peticiones por parte del cliente.
+'''
+
 
 @app.route('/_sun_distance')
 def distance_req():
@@ -76,6 +94,10 @@ def pos3d_req():
     p = request.args.get('p_p3', 0, type=int)
     result=planets[p].position3D(i)
     return jsonify(str(result.tolist()))
+
+'''
+    Captura de error 404.
+'''
 
 @app.errorhandler(404)
 def not_found(error):

@@ -6,13 +6,13 @@ from numpy import *
 import trajectory as tr
 
 class Planet:
-    def __init__(self, name, epsilon, period, a_axe, i, omega, gammab):
+    def __init__(self, name, epsilon, period, a_axe, i, omega, smallo):
         self.name = name
         self.epsilon = epsilon
         self.period = period
         self.a_axe = a_axe
         self.i = i
-        self.gamma = gammab - omega
+        self.smallo = (smallo - omega)
         self.omega = omega
 
     #Calcula la distancia del planeta al sol (módulo).
@@ -84,8 +84,8 @@ class Planet:
     def get_i(self):
         return self.i
 
-    def getGamma(self):
-        return self.gamma
+    def getSmallo(self):
+        return self.smallo
 
     #Calcula la trayectoria del planeta usando el método de Newton-Raphson
     def trajectoryNR(self, nDivisions):
@@ -118,10 +118,6 @@ class Planet:
         tray_x = []
         tray_y = []
 
-        #Definición de las funciones
-        keplerf = lambda u: u-self.epsilon*sin(u)
-        dkeplerf = lambda u: 1-self.epsilon*cos(u)
-
         for i in range(nDivisions+1):
             times.insert(len(times), self.period*i/nDivisions)
 
@@ -153,47 +149,55 @@ class Planet:
     #Obtiene la posición de un planeta para un punto dado usando la función de Bessel.
     def positionBessel(self, time):
         gi = (2*math.pi)/self.period*(time)
-        keplerf = lambda u: u-self.epsilon*sin(u)
-        dkeplerf = lambda u: 1-self.epsilon*cos(u)
 
         u = tr.besselFunctionMethod(self.epsilon, gi, 30, False)
         pos_x = self.a_axe*(cos(u)-self.epsilon)
         pos_y = self.a_axe*(sqrt(1-self.epsilon*self.epsilon)*sin(u))
         return [pos_x,pos_y]
 
-    #Obtiene la posición en R3 de un planeta para un instante dado usando la función de Bessel.
+    '''
+        Función que se encarga de realizar el paso de coordenadas de R2 a R3
+        realizando rotaciones. El orden de las rotaciones es el siguiente:
+            -   Rotamos fijando el eje z el ángulo small omega (smallo) en
+            función del planeta para obtener sus orbitas reales sobre el plano.
+            -   Rotamos el ángulo i dijando el eje x que que ya no está alineado
+             con el semieje mayor e inclinamos el plano.
+            -   Colocamos el plano finalmente en su linea de nodos rotando omega
+            con respecto al eje z.
+    '''
     def position3D(self, time):
         pos2d = self.positionBessel(time)
         pos2d.insert(len(pos2d),0)
 
-        R1 = array([[1,0,0],
-                    [0, cos(self.i), -sin(self.i)],
-                    [0, sin(self.i), cos(self.i)]])
-        R2 = array([[cos(self.gamma), -sin(self.gamma),0],
-                    [sin(self.gamma), cos(self.gamma),0],
+        i = (self.i / 180.0 * math.pi)
+        smallo = self.smallo / 180.0 * math.pi
+        omega = self.omega / 180.0 * math.pi
+
+        R1 = matrix([[1,0,0],
+                    [0,cos(i), -sin(i)],
+                    [0, sin(i), cos(i)]])
+        R2 = matrix([[cos(smallo), -sin(smallo),0],
+                    [sin(smallo), cos(smallo),0],
                     [0,0,1]])
-        R3 = array([[cos(self.omega), -sin(self.omega),0],
-                    [sin(self.omega), cos(self.omega),0],
+        R3 = matrix([[cos(omega), -sin(omega),0],
+                    [sin(omega), cos(omega),0],
                     [0,0,1]])
 
-        y = array(pos2d)
+        y = matrix(pos2d)
 
-        x = dot(R3,y)
-        x = dot(R1,x)
-        x = dot(R2,x)
+        x = R3*R1*R2*y.transpose()
 
+        return array(x.transpose())[0]
 
-        return x
-
+    '''
+        Calculamos la trayectoria en 3D de todos los planetas dados un número de
+        divisiones haciendo uso de su periodo mínimo al igual que se hizo en R2.
+    '''
     def trajectory3D(self, nDivisions):
         times = []
         tray_x = []
         tray_y = []
         tray_z = []
-
-        #Definición de las funciones
-        keplerf = lambda u: u-self.epsilon*sin(u)
-        dkeplerf = lambda u: 1-self.epsilon*cos(u)
 
         for i in range(nDivisions+1):
             times.insert(len(times), self.period*i/nDivisions)
