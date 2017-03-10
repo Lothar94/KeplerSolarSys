@@ -1,20 +1,21 @@
 {% extends "layout.html" %}
-{% block title %}KeplerSolarSystem{% endblock %}
+{% block title %}Calculo de datos - KeplerSolarSystem{% endblock %}
 {% block body %}
+<h2>Práctica Mecánica Celeste</h2>
 <p>En esta sección podremos realizar los cálculos de forma más específica para
 cada caso, es recomendable conocer la numeración de los planetas para poder
 ejecutar las operaciones. Si los campos están vacios por defecto se tomará 0
 como el valor para la operación.</p>
-<table class="common">
+<table class="pure-table">
   <tbody>
     <tr>
-        <th class="common">Nombre</th>
-        <th class="common">Número</th>
+        <th>Nombre</th>
+        <th>Número</th>
     </tr>
   {% for i in range(8): %}
       <tr>
-        <td class="common">{{ my_planets[i].getName() }}</td>
-        <td class="common">{{ i }}</td>
+        <td>{{ my_planets[i].getName() }}</td>
+        <td>{{ i }}</td>
       </tr>
   {% endfor %}
   </tbody>

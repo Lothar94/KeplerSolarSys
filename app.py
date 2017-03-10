@@ -44,6 +44,10 @@ def index():
 def calculate():
     return render_template("calculate.html", my_planets = planets)
 
+@app.route("/about/")
+def about():
+    return render_template("about.html")
+
 '''
     Recepción de peticiones por parte del cliente.
 '''
