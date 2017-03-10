@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/static/normalize.css">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/static/main.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
+  </head>
+  <body class="pure-g">
+    <header class="pure-u-1-5">
+      <img src="/static/iconapp.png" height="70px">
+      <nav class="pure-menu">
+        <ul class="pure-menu-list">
+          <li class="pure-menu-heading">KeplerSolarSys</li>
+          <li class="pure-menu-item"><a href="/" class="pure-menu-link">Inicio</a></li>
+          <li class="pure-menu-item"><a href="/calculate/" class="pure-menu-link">Calcular</a></li>
+          <li class="pure-menu-item"><a href="/about/" class="pure-menu-link">Acerca de</a></li>
+        </ul>
+      </nav>
+    </header>
+    <script type=text/javascript>
+      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+    <div class="pure-u-4-5">
+      {% block body %}
+      {% endblock %}
+    </div>

@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% block title %}Inicio - KeplerSolarSystem{% endblock %}
+{% block body %}
+<h2>Práctica Mecánica Celeste</h2>
+<p>Esta web es el resultado de lo aprendido en la asignatura de mecánica celeste
+de la universidad de Granada, muestra un cálculo aproximado de las trayectorias
+de los planetas del Sistema Solar. Estas han sido calculadas usando la ecuación
+de Kepler haciendo a su vez uso de la anomalía excéntrica.</p>
+<h2>Datos</h2>
+<p>En la tabla se incluyen todos los datos que hemos usado para el cálculo de
+  las trayectorias tanto para el caso bidimiensional como el tridimiensional.</p>
+<table class="pure-table">
+  <tbody>
+    <tr>
+        <th>Nombre</th>
+        <th>Semieje Major (a)</th>
+        <th>Periodo Mínimo (p)</th>
+        <th>Epsilon</th>
+        <th>i</th>
+        <th>omega</th>
+    </tr>
+  {% for planet in my_planets: %}
+      <tr>
+        <td>{{ planet.getName() }}</td>
+        <td>{{ planet.getA_axe() }}</td>
+        <td>{{ planet.getPeriod() }}</td>
+        <td>{{ planet.getEpsilon() }}</td>
+        <td>{{ planet.get_i() }}</td>
+        <td>{{ planet.getSmallo() }}</td>
+      </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<h2>Gráficas</h2>
+<form action="/" method="GET">
+  <p>
+    <label for="nD">Número de puntos: </label>
+    <input id="nD" name="nDivisions" min="3" placeholder="Número de Divisiones"/>
+  </p>
+  <p><input type="submit" value="Generar" /></p>
+</form>
+<div style="text-align:center">
+  <img src="data:image/png;base64,{{ img2d }}"/>
+  <img src="data:image/png;base64,{{ img3d_1 }}"/>
+  <img src="data:image/png;base64,{{ img3d_2 }}"/>
+  <img src="data:image/png;base64,{{ img3d_3 }}"/>
+</div>
+<h2>Animaciones</h2>
+  <div style="text-align:center">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/AMSLMqqNhcw" frameborder="0" allowfullscreen></iframe>      <source src="https://youtu.be/6Sh24dm34SE" type="video/mp4" />
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/6Sh24dm34SE" frameborder="0" allowfullscreen></iframe>
+  </div>
+<h2>Cálculos directos</h2>
+<table class="pure-table">
+  <tbody>
+    <tr>
+        <th>Nombre</th>
+        <th>Distancia al sol instante 0</th>
+        <th>|c|</th>
+        <th>Energía</th>
+    </tr>
+  {% for planet in my_planets: %}
+      <tr>
+        <td>{{ planet.getName() }}</td>
+        <td>{{ planet.sunDistanceTime(0) }}</td>
+        <td>{{ planet.module_angular_moment(90) }}</td>
+        <td>{{ planet.energy(90) }}</td>
+      </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p>Estos son algunos cálculos que se han realizados sobre los datos anteriores, si
+se prefiere calcular en instantes determinados o calcular algunos de estos
+atributos más específicamente dirijase a la sección de cálculos.</p>
+{% endblock %}
